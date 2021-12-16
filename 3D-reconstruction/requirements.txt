@@ -1,2 +1,4 @@
-numpy==1.21.4
-opencv-python==4.5.4.60
+matplotlib==3.5.1
+numpy==1.21.0
+opencv-python==4.5.4.58
+plotly==5.4.0

@@ -1,6 +1,6 @@
 import numpy as np
-from utils import read_points
-from camera_calibration import Image
+from helpers.utils import read_points
+from helpers.camera_calibration import Image
 
 
 lpath =  'inputs/left.jpg'
