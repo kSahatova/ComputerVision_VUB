@@ -6,5 +6,5 @@ All computations take place in the `camera_calibration.py` file where by means o
 
 Task 2. Triangulation
 
-This part of the 3D reconstruction task was elaborated in the `triangulation.py` file. Running the script, we calculate 3D coordinates for each pair of the corresponding points using the projection matrix of each camera. All estimated points write down to the file `estimatedPoints3D.txt` in the `outputs` directory if MSE of the first given points is less that 1. These points are estimations with a depth coordination. 
+This part of the 3D reconstruction task was elaborated in the `main.py` file. Running the script, we calculate 3D coordinates for each pair of the corresponding points using the projection matrix of each camera. All estimated points write down to the file `estimatedPoints3D.txt` in the `outputs` directory if MSE of the first given points is less that 1. These points are estimations with a depth coordination. 
 Finally, all objects of the proposed scene were reconstructed in the `plot3D.ipynb`. The result is saved in `3Dscene.jpg`.
