@@ -1,6 +1,6 @@
 # computer_vision_VUB
 
-Task 1. Calculation calibration and axes reconstruction
+Task 1. Camera calibration and axes reconstruction
 
 All computations take place in the `camera_calibration.py` file where by means of `utils.py` camera parameters are calculated. If the file runs directly, we receive two images in the `output` directory with depicted camera axes for left and right image, respectively. `xy_left.txt` and `xy_right.txt` contain precomputed points on the corresponding images; both files were derived by `get_points.py`. To resolve a remaining part of the task, `Image` class was defined to pass necessary information about the parameters of each camera.  
 
