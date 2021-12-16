@@ -6,15 +6,6 @@ from utils import projection_matrix, get_camera_params
 from utils import draw_axes
 
 
-#Read corresponding points from both images  
-lpath =  'inputs/left.jpg'
-rpath =  'inputs/right.jpg'
-
-lpoints = read_points('inputs/xy_left.txt')
-rpoints = read_points('inputs/xy_right.txt')
-obj_points = read_points('inputs/calibration_points3.txt')
-
-
 class Image:
     def __init__(self, image_path, corresp_points, obj_points):
         self.path = image_path
@@ -28,14 +19,20 @@ class Image:
         self.img = cv.imread(self.path)
 
 
-
-limage = Image(lpath, lpoints, obj_points)
-rimage = Image(rpath, rpoints, obj_points)
-
-
 if __name__ == '__main__':
-    limage.img_with_axes = draw_axes(limage.img, limage.M, 200, (0, 0, 0))
-    rimage.img_with_axes = draw_axes(rimage.img, rimage.M, 200, (0, 0, 0))
+    #Read corresponding points from both images  
+    lpath =  'inputs/left.jpg'
+    rpath =  'inputs/right.jpg'
+
+    lpoints = read_points('inputs/xy_left.txt')
+    rpoints = read_points('inputs/xy_right.txt')
+    obj_points = read_points('inputs/calibration_points3.txt')
+
+    limage = Image(lpath, lpoints, obj_points)
+    rimage = Image(rpath, rpoints, obj_points)
+
+    limage.img_with_axes = draw_axes(limage.img, limage.M_calc, 200, (0, 0, 0))
+    rimage.img_with_axes = draw_axes(rimage.img, rimage.M_calc, 200, (0, 0, 0))
 
     cv.imwrite('outputs/left_with_axs.jpg', limage.img_with_axes)
     cv.imwrite('outputs/right_with_axs.jpg', rimage.img_with_axes)

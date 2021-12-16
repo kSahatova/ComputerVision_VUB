@@ -1,6 +1,4 @@
 import numpy as np
-import cv2 as cv
-from numpy.lib.twodim_base import tri
 from utils import read_points
 from camera_calibration import Image
 
@@ -57,8 +55,8 @@ estimated_points = X_h[:, :3]/np.expand_dims(X_h[:, 3], axis=1)
 mse = (np.square(obj_points - estimated_points[:12, :])).mean()
 print(mse)
 
-if 0 < mse < 2:
-    with open('outputs/estimated_points3D_test.txt', 'w') as f:
+if 0 < mse < 1:
+    with open('outputs/estimated_points3D.txt', 'w') as f:
         for i in range(estimated_points.shape[0]):
             line = list(map(int, estimated_points[i, :]))
             f.write(str(line).replace(',', ' ').strip('[]')+'\n')
@@ -67,12 +65,3 @@ else:
 
 
 
-'''triangulation = cv.triangulatePoints(limage.M, rimage.M,
-                                np.transpose(limage.corresp_points),
-                                np.transpose((rimage.corresp_points)))
-print(triangulation)
-triangulation[:, :] /= triangulation[3, :]
-print('Projected point from openCV:',  triangulation.T)
-mse = (np.square(obj_points - triangulation[:12, :])).mean()
-print(mse)
-'''

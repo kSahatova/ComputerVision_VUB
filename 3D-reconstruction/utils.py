@@ -90,10 +90,10 @@ def draw_axes(img, M, axis_len, origin3D):
     yaxis2D = tuple(map( int, yaxis2D_h[:2]/yaxis2D_h[2]))
     zaxis2D = tuple(map( int, zaxis2D_h[:2]/zaxis2D_h[2]))
 
-    print('origin of the image', origin2D)
+    '''print('origin of the image', origin2D)
     print('point for X axis', xaxis2D)
     print('point for Y axis',yaxis2D)
-    print('point for Z axis',zaxis2D)
+    print('point for Z axis',zaxis2D)'''
 
     img = cv.line(img, origin2D, xaxis2D, color=(255, 0, 0), thickness=3)
     img = cv.line(img, origin2D, yaxis2D, color=(0, 255, 0), thickness=3)
