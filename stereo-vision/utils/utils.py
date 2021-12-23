@@ -26,19 +26,14 @@ def direct_linear_transformation(obj_points, img_points):
     n = len(img_points)
     B = np.zeros((2*n, 12))
     for j in range(0, n):
-        #print(X[j], Y[j], Z[j])
         B[i, :] = [X[j], Y[j], Z[j], 1, 0, 0, 0, 0, -u[j]*X[j], -u[j]*Y[j], -u[j]*Z[j], -u[j]]
         B[i+1, :] = [0, 0, 0, 0, X[j], Y[j], Z[j], 1, -v[j]*X[j], -v[j]*Y[j], -v[j]*Z[j], -v[j]]
         i += 2
-    #print(B)
     return B
 
 
 def projection_matrix(B):
     u, s, vh = np.linalg.svd(B, full_matrices=False)
-    #print('s\n', s)
-    #print('vh\n', vh)
-    #v = vh.T
     M = vh[-1, :]
     M = np.reshape(M, (3, 4)) 
     return M
@@ -89,11 +84,6 @@ def draw_axes(img, M, axis_len, origin3D):
     xaxis2D = tuple(map( int, xaxis2D_h[:2]/xaxis2D_h[2]))
     yaxis2D = tuple(map( int, yaxis2D_h[:2]/yaxis2D_h[2]))
     zaxis2D = tuple(map( int, zaxis2D_h[:2]/zaxis2D_h[2]))
-
-    '''print('origin of the image', origin2D)
-    print('point for X axis', xaxis2D)
-    print('point for Y axis',yaxis2D)
-    print('point for Z axis',zaxis2D)'''
 
     img = cv.line(img, origin2D, xaxis2D, color=(255, 0, 0), thickness=3)
     img = cv.line(img, origin2D, yaxis2D, color=(0, 255, 0), thickness=3)

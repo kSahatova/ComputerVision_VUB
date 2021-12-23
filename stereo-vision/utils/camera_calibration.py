@@ -1,9 +1,9 @@
 import os
 import numpy as np
 import cv2 as cv
-from utils import read_points, direct_linear_transformation
-from utils import projection_matrix, get_camera_params
-from utils import draw_axes
+from utils.utils import read_points, direct_linear_transformation
+from utils.utils import projection_matrix, get_camera_params
+from utils.utils import draw_axes
 
 
 class Image:
@@ -11,7 +11,7 @@ class Image:
         self.path = image_path
         self.corresp_points = corresp_points
         self.obj_points = obj_points
-        self.B = direct_linear_transformation(self.obj_points, self.corresp_points)
+        self.B = direct_linear_transformation(self.obj_points, self.corresp_points[:12])
         self.M = projection_matrix(self.B)
         self.K, self.R, self.T = get_camera_params(self.M)
         self.A =   np.vstack((np.hstack((self.R, self.T)), [0, 0, 0, 1])) 
@@ -20,12 +20,12 @@ class Image:
 
 
 if __name__ == '__main__':
-    #Read corresponding points from both images  
+    #Read corresponding points for both images  
     lpath =  'inputs/left.jpg'
     rpath =  'inputs/right.jpg'
 
-    lpoints = read_points('inputs/xy_left.txt')
-    rpoints = read_points('inputs/xy_right.txt')
+    lpoints = read_points('outputs/all_points_left.txt')
+    rpoints = read_points('outputs/all_points_right.txt')
     obj_points = read_points('inputs/calibration_points3.txt')
 
     limage = Image(lpath, lpoints, obj_points)
