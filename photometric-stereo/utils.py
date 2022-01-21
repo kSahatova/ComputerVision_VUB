@@ -1,85 +1,60 @@
-import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
+from tqdm import tqdm
+from plotly.offline import plot
+import plotly.graph_objects as go
 
 
-def generate_binary_mask(img, threshold=80):
-    mask = np.where(img > threshold, 1, 0)
-    return mask
+def generate_binary_mask(image, threshold=10):
+    return np.where(image > threshold, 1, 0)
 
 
-def photometric_stereo(I, mask, L):
-    """
-    Parameters:
-    I - intensities matrix (M x h x W)
-    mask - matrix of the active pixels (M x h x W)
-    L - direction if the light source (3 x 20)
-    Returns [p, q]
-    """
-    # reshape I and mask
+def photometric_stereo(I, binary_mask, L):
     m, h, w = I.shape
-    n = h * w
-    I = np.reshape(I, (n, m))
-    mask = np.reshape(mask, (n, m))
-    normal = np.zeros((3, n))
-    for i in range(n):
-        indices = np.where(mask[i] > 0)[0]
-        if len(indices) < 3:
-            pass
-        else:
-            # get unique intensities for ith pixel under more than 3 incident light sources
-            Ii = I[i, indices].reshape(-1, 1)  # ith pixel for K number of light directions
-            unique_pixels, unique_ind = np.unique(Ii[:, 0], return_index=True)
-            # print(unique_ind)
-            # print(unique_pixels)
-            # get these sources illuminating the ith pixel
-            Li = L[:, unique_ind]  # Li (3 x K)
-            # solve by least squares fitting
-            res = (np.linalg.pinv(Li.T)).dot(unique_pixels)
-            albedo = np.linalg.norm(res)
-            # normalize the result
-            normal[:, i] = res / albedo
+    albedo_map = np.zeros((h, w))
+    surf_normals = np.zeros((h, w, 3))
 
-    normal = np.reshape(normal, (3, w, h))
-    a = normal[0, :, :]
-    b = normal[1, :, :]
-    c = normal[2, :, :]
-    p = np.where(c != 0, -a / c, 0)
-    q = np.where(c != 0, -b / c, 0)
+    for i in tqdm(range(h)):
+        for j in range(w):
+            Ii = I[:, i, j]
+            mask = binary_mask[:, i, j]
+            filtered_mask_ind = np.where(mask > 0)[0]
+            if len(filtered_mask_ind) >= 3:
+                unique_pixels, unique_ind = np.unique(Ii[filtered_mask_ind], return_index=True)
+                Li = L[:, unique_ind]  # 3 x K
+                unique_pixels = unique_pixels.reshape(-1, 1)  # I - 1 x K -> K x 1
+                LiT = Li.T  # K x 3
+                res = (np.linalg.inv(Li.dot(LiT))).dot(Li)
+                res = res.dot(unique_pixels)
+                albedo = np.linalg.norm(res)
+                albedo_map[i, j] = albedo
+                surf_normals[i, j, :] = res[:, 0] / albedo
 
-    return p, q
+    a, b, c = surf_normals[:, :, 0], surf_normals[:, :, 1], surf_normals[:, :, 2]
+    p = np.where(c > 0, -a/c, 0)
+    q = np.where(c > 0, -b/c, 0)
+    return p, q, albedo_map
 
 
-def plot_normal_map(normal=None, height=None, width=None):
-    """
-    Parameters:
-    normal - array of surface normal (width x height x 3)
-    height - height of the image
-    width - width of the image
-    """
-    if normal is None:
-        raise ValueError("Surface normal `normal` is None")
-    N = np.reshape(normal, (height, width, 3))  # reshape to image coordinates
-    N = cv2.cvtColor(N.astype('float32'), cv2.COLOR_BGR2RGB)
-    N = (N + 1.0) / 2.0  # rescale
-    name = 'normal map'
-    cv2.imshow(name, N)
-    cv2.waitKey(0)
-    cv2.destroyWindow(name)
+def plot_normal_map(normal=None, albedo_map=None, winname=None):
+    N = (normal.astype('float32') + 1.0) / 2.0  # rescale
+    N *= 255
+    cv2.imwrite(winname+'.png', cv2.cvtColor(N, cv2.COLOR_RGB2BGR))  # cv2.cvtColor(N, cv2.COLOR_RGB2BGR)
+    cv2.imwrite('outputs/albedo.png', albedo_map.astype('float32'))
 
 
-def plot_surface(depth, normals):
-    fig = plt.figure()
-    ax = fig.gca(projection='3d')
-    X, Y, _ = np.meshgrid(np.arange(0, np.shape(normals)[0]),
-                          np.arange(0, np.shape(normals)[1]),
-                          np.arange(1))
-    X = X[..., 0]
-    Y = Y[..., 0]
-    H = np.real(depth)
-    ax.plot_surface(X, Y, H.T)
-    plt.show()
-
-
-
+def plot_surface3d(z):
+    '''z = np.where(z > 20, 10, z)
+    z = np.where(z < -50, -20, z)'''
+    fig = go.Figure(data=[go.Surface(z=z)])
+    fig.update_layout(autosize=False,
+                      width=500, height=500,
+                      margin=dict(l=65, r=50, b=65, t=90))
+    camera = dict(
+        up=dict(x=0, y=0, z=1),
+        center=dict(x=0, y=0, z=0),
+        eye=dict(x=1.25, y=1.25, z=3)
+    )
+    fig.update_layout(scene_camera=camera)
+    fig.write_image("outputs/3D-surface.png")
+    plot(fig)

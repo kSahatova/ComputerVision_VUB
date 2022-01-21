@@ -109,7 +109,9 @@ yaml=0.2.5=he774522_0
 zfp=0.5.5=hd77b12b_6
 zlib=1.2.11=h8cc25b3_4
 zstd=1.4.9=h19a0ad4_0
-
 numpy~=1.21.2
 matplotlib~=3.5.0
 wavepy~=1.0.5
+pillow~=8.4.0
+plotly~=5.1.0
+tqdm~=4.62.3

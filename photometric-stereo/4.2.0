@@ -1,0 +1,14 @@
+Collecting nbformat
+  Using cached nbformat-5.1.3-py3-none-any.whl (178 kB)
+Requirement already satisfied: ipython-genutils in c:\users\user\anaconda3\envs\photometric-stereo\lib\site-packages (from nbformat) (0.2.0)
+Requirement already satisfied: jupyter-core in c:\users\user\anaconda3\envs\photometric-stereo\lib\site-packages (from nbformat) (4.9.1)
+Requirement already satisfied: traitlets>=4.1 in c:\users\user\anaconda3\envs\photometric-stereo\lib\site-packages (from nbformat) (5.1.1)
+Collecting jsonschema!=2.5.0,>=2.4
+  Using cached jsonschema-4.4.0-py3-none-any.whl (72 kB)
+Collecting attrs>=17.4.0
+  Using cached attrs-21.4.0-py2.py3-none-any.whl (60 kB)
+Collecting pyrsistent!=0.17.0,!=0.17.1,!=0.17.2,>=0.14.0
+  Using cached pyrsistent-0.18.1-cp39-cp39-win_amd64.whl (61 kB)
+Requirement already satisfied: pywin32>=1.0 in c:\users\user\anaconda3\envs\photometric-stereo\lib\site-packages (from jupyter-core->nbformat) (302)
+Installing collected packages: pyrsistent, attrs, jsonschema, nbformat
+Successfully installed attrs-21.4.0 jsonschema-4.4.0 nbformat-5.1.3 pyrsistent-0.18.1
