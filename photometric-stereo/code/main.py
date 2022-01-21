@@ -2,13 +2,13 @@ import os
 import cv2
 import numpy as np
 from PIL import Image, ImageOps
-from frankoChapello import frankotchellappa
+from code.frankoChapello import frankotchellappa
 from utils import generate_binary_mask, photometric_stereo, plot_normal_map, plot_surface3d
 
 
-IMG_PATH = './PSData/cat/Objects'
-LIGHTS_PATH = './PSData/cat/light_directions.txt'
-MASKS_PATH = './masks/'
+IMG_PATH = '../PSData/cat/Objects'
+LIGHTS_PATH = '../PSData/cat/light_directions.txt'
+MASKS_PATH = '../masks/'
 
 images = []
 masks = []
@@ -49,7 +49,7 @@ depth = frankotchellappa(dx, dy)
 depth = np.real(depth)
 
 # plot surface
-mask = cv2.imread('./masks/mask0.png', cv2.IMREAD_GRAYSCALE)
+mask = cv2.imread('../masks/mask0.png', cv2.IMREAD_GRAYSCALE)
 for i in range(depth.shape[0]):
     for j in range(depth.shape[1]):
         if mask[i, j] == 0:

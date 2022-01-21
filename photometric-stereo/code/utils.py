@@ -40,7 +40,7 @@ def plot_normal_map(normal=None, albedo_map=None, winname=None):
     N = (normal.astype('float32') + 1.0) / 2.0  # rescale
     N *= 255
     cv2.imwrite(winname+'.png', cv2.cvtColor(N, cv2.COLOR_RGB2BGR))  # cv2.cvtColor(N, cv2.COLOR_RGB2BGR)
-    cv2.imwrite('outputs/albedo.png', albedo_map.astype('float32'))
+    cv2.imwrite('../outputs/albedo.png', albedo_map.astype('float32'))
 
 
 def plot_surface3d(z):
